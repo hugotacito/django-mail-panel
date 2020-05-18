@@ -15,17 +15,29 @@ class MailToolbarBackendEmail(mail.EmailMultiAlternatives):
         self.date_sent = datetime.datetime.now()
         self.read = False
         message.message()  # triggers header validation
-
-        super(MailToolbarBackendEmail, self).__init__(
-            subject=message.subject,
-            to=message.to,
-            cc=message.cc,
-            bcc=message.bcc,
-            reply_to=message.reply_to,
-            from_email=message.from_email,
-            body=message.body,
-            alternatives=message.alternatives,
-        )
+        if hasattr(message, 'alternatives'):
+            super(MailToolbarBackendEmail, self).__init__(
+                subject=message.subject,
+                to=message.to,
+                cc=message.cc,
+                bcc=message.bcc,
+                reply_to=message.reply_to,
+                from_email=message.from_email,
+                body=message.body,
+                alternatives=message.alternatives,
+                attachments=message.attachments
+            )
+        else:
+            super(MailToolbarBackendEmail, self).__init__(
+                subject=message.subject,
+                to=message.to,
+                cc=message.cc,
+                bcc=message.bcc,
+                reply_to=message.reply_to,
+                from_email=message.from_email,
+                body=message.body,
+                attachments=message.attachments
+            )
 
 
 class MailToolbarBackend(EmailBackend):
